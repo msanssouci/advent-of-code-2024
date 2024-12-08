@@ -65,7 +65,7 @@ fun calculateSimilarityScore(puzzleStorage: PuzzleStorage): Int {
 
 fun main() {
     // Iterate over lines in file puzzle-input.txt
-    val inputLines = object {}.javaClass.getResource("/puzzle-input.txt")!!.readText().lines()
+    val inputLines = object {}.javaClass.getResource("/day1/puzzle-input.txt")!!.readText().lines()
     println("Total Distance: ${calculateTotalDistance(createPuzzleStorage(inputLines))}")
     println("Similarity Score: ${calculateSimilarityScore(createPuzzleStorage(inputLines))}")
 }
