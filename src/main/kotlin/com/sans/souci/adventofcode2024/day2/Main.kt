@@ -2,46 +2,53 @@ package com.sans.souci.adventofcode2024.day2
 
 import java.io.BufferedReader
 
-fun countSafeReports(reportsBufferedReader: BufferedReader): Int {
+val increasingDifferenceRange = 1..3
+val decreasingValidDifferenceRange = -1 downTo -3
+
+
+fun determineValidDifferenceRange(difference: Int) =
+    if (difference > 0) increasingDifferenceRange else decreasingValidDifferenceRange
+
+fun countSafeReports(reportsBufferedReader: BufferedReader, tolerate: Boolean = false): Int {
     val validityOfReports = reportsBufferedReader.readLines().map { line ->
-        var valid = false
-        try {
-            val differences = line.split(" ").zipWithNext()
-                .map { (a, b) ->
-                    // Compute the difference between the two levels
-                    val difference = b.toInt() - a.toInt()
-
-                    if (difference !in 1..3 && difference !in -1 downTo -3) {
-                        // Short circuit if the difference is out of range
-                        throw Exception("Difference: $difference out of range")
+        val levels = line.split(" ").map(String::toInt)
+        var reportValid = isReportValidArray(levels)
+        if (!isReportValidArray(levels)) {
+            if (tolerate) {
+                // Part two brute force...
+                for (i: Int in levels.indices) {
+                    val levelsMinusOne = levels.toMutableList().apply { removeAt(i) }
+                    if (isReportValidArray(levelsMinusOne)) {
+                        reportValid = true
                     }
-
-                    difference
-                }
-
-            val increasing = differences.first() > 0
-            valid = !differences.any {
-                when {
-                    increasing -> it < 0
-                    else -> it > 0
                 }
             }
-
-        } catch (e: Exception) {
-            println(e.message)
         }
 
-        valid
+        reportValid
     }
 
     return validityOfReports.count { it }
 }
 
+fun isReportValidArray(levels: List<Int>): Boolean {
+    val diffs = levels.zipWithNext().map { (a, b) -> b - a }
+
+    val validDifferenceRange = determineValidDifferenceRange(diffs.first())
+
+    return diffs.all { it in validDifferenceRange }
+}
+
 fun main() {
-    // Read the file
-    val numberOfUnsafeReports = object {}.javaClass.getResource("/day2/puzzle-input.txt")!!
+
+    val numberOfUnsafeReportsPartOne = object {}.javaClass.getResource("/day2/puzzle-input.txt")!!
         .openStream().bufferedReader().use { countSafeReports(it) }
 
+    val numberOfUnsafeReportsPartTwo = object {}.javaClass.getResource("/day2/puzzle-input.txt")!!
+        .openStream().bufferedReader().use { countSafeReports(it, tolerate = true) }
 
-    println("Number of safe reports: $numberOfUnsafeReports")
+
+
+    println("Number of safe reports part one: $numberOfUnsafeReportsPartOne should be 282")
+    println("Number of safe reports part two: $numberOfUnsafeReportsPartTwo should be 349")
 }
