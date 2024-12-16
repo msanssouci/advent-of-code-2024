@@ -1,11 +1,13 @@
 package com.sans.souci.adventofcode2024.day2
 
+import com.sans.souci.adventofcode2024.utils.puzzleInputForDay
 import java.io.BufferedReader
 
 val increasingDifferenceRange = 1..3
 val decreasingValidDifferenceRange = -1 downTo -3
 
-fun determineValidDifferenceRange(difference: Int) = if (difference > 0) increasingDifferenceRange else decreasingValidDifferenceRange
+fun determineValidDifferenceRange(difference: Int) =
+    if (difference > 0) increasingDifferenceRange else decreasingValidDifferenceRange
 
 fun countSafeReports(
     reportsBufferedReader: BufferedReader,
@@ -42,13 +44,9 @@ fun isReportValidArray(levels: List<Int>): Boolean {
 }
 
 fun main() {
-    val numberOfUnsafeReportsPartOne =
-        object {}.javaClass.getResource("/day2/puzzle-input.txt")!!
-            .openStream().bufferedReader().use { countSafeReports(it) }
+    val numberOfUnsafeReportsPartOne = puzzleInputForDay(2).use { countSafeReports(it) }
 
-    val numberOfUnsafeReportsPartTwo =
-        object {}.javaClass.getResource("/day2/puzzle-input.txt")!!
-            .openStream().bufferedReader().use { countSafeReports(it, tolerate = true) }
+    val numberOfUnsafeReportsPartTwo = puzzleInputForDay(2).use { countSafeReports(it, tolerate = true) }
 
     println("Number of safe reports part one: $numberOfUnsafeReportsPartOne should be 282")
     println("Number of safe reports part two: $numberOfUnsafeReportsPartTwo should be 349")
