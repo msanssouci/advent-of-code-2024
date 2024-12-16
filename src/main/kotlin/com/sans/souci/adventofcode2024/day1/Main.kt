@@ -3,7 +3,6 @@ package com.sans.souci.adventofcode2024.day1
 import java.util.PriorityQueue
 import kotlin.math.abs
 
-
 /**
  * Approximate max storage size is 3N where N is the number of lines in the input file
  */
