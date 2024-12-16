@@ -3,7 +3,6 @@ package com.sans.souci.adventofcode2024.day1
 import java.util.PriorityQueue
 import kotlin.math.abs
 
-
 /**
  * Approximate max storage size is 3N where N is the number of lines in the input file
  */
@@ -65,7 +64,7 @@ fun calculateSimilarityScore(puzzleStorage: PuzzleStorage): Int {
 
 fun main() {
     // Iterate over lines in file puzzle-input.txt
-    val inputLines = object {}.javaClass.getResource("/puzzle-input.txt")!!.readText().lines()
+    val inputLines = object {}.javaClass.getResource("/day1/puzzle-input.txt")!!.readText().lines()
     println("Total Distance: ${calculateTotalDistance(createPuzzleStorage(inputLines))}")
     println("Similarity Score: ${calculateSimilarityScore(createPuzzleStorage(inputLines))}")
 }
