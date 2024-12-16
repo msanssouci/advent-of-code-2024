@@ -1,5 +1,6 @@
 package com.sans.souci.adventofcode2024.day1
 
+import com.sans.souci.adventofcode2024.utils.puzzleInputForDay
 import java.util.PriorityQueue
 import kotlin.math.abs
 
@@ -64,7 +65,7 @@ fun calculateSimilarityScore(puzzleStorage: PuzzleStorage): Int {
 
 fun main() {
     // Iterate over lines in file puzzle-input.txt
-    val inputLines = object {}.javaClass.getResource("/day1/puzzle-input.txt")!!.readText().lines()
+    val inputLines = puzzleInputForDay(1).readLines()
     println("Total Distance: ${calculateTotalDistance(createPuzzleStorage(inputLines))}")
     println("Similarity Score: ${calculateSimilarityScore(createPuzzleStorage(inputLines))}")
 }
