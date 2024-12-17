@@ -6,8 +6,7 @@ import java.io.BufferedReader
 val increasingDifferenceRange = 1..3
 val decreasingValidDifferenceRange = -1 downTo -3
 
-fun determineValidDifferenceRange(difference: Int) =
-    if (difference > 0) increasingDifferenceRange else decreasingValidDifferenceRange
+fun determineValidDifferenceRange(difference: Int) = if (difference > 0) increasingDifferenceRange else decreasingValidDifferenceRange
 
 fun countSafeReports(
     reportsBufferedReader: BufferedReader,
