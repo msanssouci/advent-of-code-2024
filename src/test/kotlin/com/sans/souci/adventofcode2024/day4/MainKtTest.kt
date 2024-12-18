@@ -24,6 +24,24 @@ class MainKtTest : FunSpec({
         xmasCountDay1(sampleInput.split("\n")) shouldBe 18
     }
 
+//    test("Can solve day 2 example ") {
+//        val sampleInput =
+//            """
+//            MMMSXXMASM
+//            MSAMXMSMSA
+//            AMXSXMAAMM
+//            MSAMASMSMX
+//            XMASAMXAMM
+//            XXAMMXXAMA
+//            SMSMSASXSS
+//            SAXAMASAAA
+//            MAMMMXMMMM
+//            MXMXAXMASX
+//            """.trimIndent()
+//
+//        xmasCountDay2(sampleInput.split("\n")) shouldBe 9
+//    }
+
     test("Can solve small") {
         val smallSampleInput =
             """

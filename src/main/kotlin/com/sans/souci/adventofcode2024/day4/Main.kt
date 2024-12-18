@@ -2,6 +2,17 @@ package com.sans.souci.adventofcode2024.day4
 
 import com.sans.souci.adventofcode2024.utils.puzzleInputForDay
 
+interface WordSearchTraverser {
+    fun traverse(
+        validDirections: Set<Direction>,
+        lines: List<String>,
+        lineIndex: Int,
+        charIndex: Int,
+        currentState: XMASState,
+        direction: Direction,
+    ): Int
+}
+
 sealed interface XMASState {
     data object Start : XMASState
 
@@ -12,120 +23,177 @@ sealed interface XMASState {
     data object AFound : XMASState
 }
 
-sealed interface Direction {
-    data object Up : Direction
+sealed class Direction : WordSearchTraverser {
+    data object DiagonalUpLeft : Direction() {
+        override fun traverse(
+            validDirections: Set<Direction>,
+            lines: List<String>,
+            lineIndex: Int,
+            charIndex: Int,
+            currentState: XMASState,
+            direction: Direction
+        ): Int = dfs(
+            validDirections,
+            lines,
+            lineIndex - 1,
+            charIndex - 1,
+            currentState,
+            direction,
+        )
+    }
 
-    data object Down : Direction
+    data object Up : Direction() {
+        override fun traverse(
+            validDirections: Set<Direction>,
+            lines: List<String>,
+            lineIndex: Int,
+            charIndex: Int,
+            currentState: XMASState,
+            direction: Direction
+        ): Int = dfs(
+            validDirections,
+            lines,
+            lineIndex - 1,
+            charIndex,
+            currentState,
+            direction,
+        )
+    }
 
-    data object Left : Direction
+    data object DiagonalUpRight : Direction() {
+        override fun traverse(
+            validDirections: Set<Direction>,
+            lines: List<String>,
+            lineIndex: Int,
+            charIndex: Int,
+            currentState: XMASState,
+            direction: Direction
+        ): Int = dfs(
+            validDirections,
+            lines,
+            lineIndex - 1,
+            charIndex + 1,
+            currentState,
+            direction,
+        )
+    }
 
-    data object Right : Direction
+    data object Left : Direction() {
+        override fun traverse(
+            validDirections: Set<Direction>,
+            lines: List<String>,
+            lineIndex: Int,
+            charIndex: Int,
+            currentState: XMASState,
+            direction: Direction
+        ): Int = dfs(
+            validDirections,
+            lines,
+            lineIndex,
+            charIndex - 1,
+            currentState,
+            direction,
+        )
+    }
 
-    data object DiagonalUpLeft : Direction
+    data object Right : Direction() {
+        override fun traverse(
+            validDirections: Set<Direction>,
+            lines: List<String>,
+            lineIndex: Int,
+            charIndex: Int,
+            currentState: XMASState,
+            direction: Direction
+        ): Int = dfs(
+            validDirections,
+            lines,
+            lineIndex,
+            charIndex + 1,
+            currentState,
+            direction,
+        )
+    }
 
-    data object DiagonalDownLeft : Direction
+    data object DiagonalDownLeft : Direction() {
+        override fun traverse(
+            validDirections: Set<Direction>,
+            lines: List<String>,
+            lineIndex: Int,
+            charIndex: Int,
+            currentState: XMASState,
+            direction: Direction
+        ): Int = dfs(
+            validDirections,
+            lines,
+            lineIndex + 1,
+            charIndex - 1,
+            currentState,
+            direction,
+        )
+    }
 
-    data object DiagonalUpRight : Direction
+    data object Down : Direction() {
+        override fun traverse(
+            validDirections: Set<Direction>,
+            lines: List<String>,
+            lineIndex: Int,
+            charIndex: Int,
+            currentState: XMASState,
+            direction: Direction
+        ): Int = dfs(
+            validDirections,
+            lines,
+            lineIndex + 1,
+            charIndex,
+            currentState,
+            direction,
+        )
+    }
 
-    data object DiagonalDownRight : Direction
+    data object DiagonalDownRight : Direction() {
+        override fun traverse(
+            validDirections: Set<Direction>,
+            lines: List<String>,
+            lineIndex: Int,
+            charIndex: Int,
+            currentState: XMASState,
+            direction: Direction
+        ): Int = dfs(
+            validDirections,
+            lines,
+            lineIndex + 1,
+            charIndex + 1,
+            currentState,
+            direction,
+        )
+    }
 }
 
 fun xmasCountDay1(lines: List<String>): Int {
+    val validDirections = setOf(
+        Direction.DiagonalUpLeft,
+        Direction.Up,
+        Direction.DiagonalUpRight,
+        Direction.Left,
+        Direction.Right,
+        Direction.DiagonalDownLeft,
+        Direction.Down,
+        Direction.DiagonalDownRight
+
+    )
     var xmasCounts = 0
     for (lineIndex in lines.indices) {
         for (charIndex in lines[lineIndex].indices) {
-            xmasCounts += dfs(lines, lineIndex, charIndex)
+            xmasCounts += dfs(validDirections, lines, lineIndex, charIndex)
         }
     }
 
     return xmasCounts
 }
 
-typealias DFS = (
-    lines: List<String>,
-    lineIndex: Int,
-    charIndex: Int,
-    currentState: XMASState,
-    direction: Direction,
-) -> Int
-
-val validTraversals =
-    mutableMapOf<Direction, DFS>(
-        Direction.DiagonalUpLeft to { lines, lineIndex, charIndex, currentState, direction ->
-            dfs(
-                lines,
-                lineIndex - 1,
-                charIndex - 1,
-                currentState,
-                direction,
-            )
-        },
-        Direction.Up to { lines, lineIndex, charIndex, currentState, direction ->
-            dfs(
-                lines,
-                lineIndex - 1,
-                charIndex,
-                currentState,
-                direction,
-            )
-        },
-        Direction.DiagonalUpRight to { lines, lineIndex, charIndex, currentState, direction ->
-            dfs(
-                lines,
-                lineIndex - 1,
-                charIndex + 1,
-                currentState,
-                direction,
-            )
-        },
-        Direction.Left to { lines, lineIndex, charIndex, currentState, direction ->
-            dfs(
-                lines,
-                lineIndex,
-                charIndex - 1,
-                currentState,
-                direction,
-            )
-        },
-        Direction.Right to { lines, lineIndex, charIndex, currentState, direction ->
-            dfs(
-                lines,
-                lineIndex,
-                charIndex + 1,
-                currentState,
-                direction,
-            )
-        },
-        Direction.DiagonalDownLeft to { lines, lineIndex, charIndex, currentState, direction ->
-            dfs(
-                lines,
-                lineIndex + 1,
-                charIndex - 1,
-                currentState,
-                direction,
-            )
-        },
-        Direction.Down to { lines, lineIndex, charIndex, currentState, direction ->
-            dfs(
-                lines,
-                lineIndex + 1,
-                charIndex,
-                currentState,
-                direction,
-            )
-        },
-        Direction.DiagonalDownRight to { lines, lineIndex, charIndex, currentState, direction ->
-            dfs(
-                lines,
-                lineIndex + 1,
-                charIndex + 1,
-                currentState,
-                direction,
-            )
-        },
-    )
 
 fun dfs(
+    validDirections: Set<Direction>,
     lines: List<String>,
     lineIndex: Int,
     charIndex: Int,
@@ -140,17 +208,17 @@ fun dfs(
     val currChar = lines[lineIndex][charIndex]
     return when {
         currChar == 'X' && currentState == XMASState.Start -> {
-            validTraversals.entries.map {
-                it.value(lines, lineIndex, charIndex, XMASState.XFound, it.key)
+            validDirections.map {
+                it.traverse(validDirections, lines, lineIndex, charIndex, XMASState.XFound, it)
             }.sum()
         }
 
         currChar == 'M' && currentState == XMASState.XFound -> {
-            validTraversals[direction]!!.invoke(lines, lineIndex, charIndex, XMASState.MFound, direction!!)
+            direction!!.traverse(validDirections, lines, lineIndex, charIndex, XMASState.MFound, direction!!)
         }
 
         currChar == 'A' && currentState == XMASState.MFound -> {
-            validTraversals[direction]!!.invoke(lines, lineIndex, charIndex, XMASState.AFound, direction!!)
+            direction!!.traverse(validDirections, lines, lineIndex, charIndex, XMASState.AFound, direction!!)
         }
 
         currChar == 'S' && currentState == XMASState.AFound -> {
@@ -159,22 +227,6 @@ fun dfs(
 
         else -> 0
     }
-
-    // for char in line
-    // if out of bounds return
-    // if char is X
-    // Set state to X found
-    // DFS 8 directions with bounds checking
-    // if char is M and State is X found
-    // Set state to M found
-    // DFS 8 directions with bounds checking
-    // if char is A and State is M found
-    // Set state to A found
-    // DFS 8 directions with bounds checking
-    // if char is S and State is A found
-    // Set state to S found
-    // return
-    // else return
 }
 
 fun main() {
